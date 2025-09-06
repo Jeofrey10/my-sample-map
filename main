@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Google Map Example</title>
+    <style>
+      /* Make the map fill the screen */
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h3 style="text-align:center">My Google Map</h3>
+    <div id="map"></div>
+
+    <script>
+      // Initialize and add the map
+      function initMap() {
+        // Location: Chennai, India
+        const location = { lat: 13.0827, lng: 80.2707 };
+
+        // Create map centered on location
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 10,
+          center: location,
+        });
+
+        // Add a marker
+        const marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          title: "Hello from Chennai!",
+        });
+      }
+    </script>
+
+    <!-- Load Google Maps JS API -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDO6ztAnXwcgB1KYRMJVh_833EyfAsV38E&callback=initMap">
+    </script>
+  </body>
+</html>
