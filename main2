@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Google Maps Directions Example</title>
+    <style>
+      #map {
+        height: 80vh;
+        width: 100%;
+      }
+      #panel {
+        padding: 10px;
+        background: #f8f8f8;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 style="text-align:center">Route Finder with Distance</h2>
+
+    <!-- Input fields -->
+    <div id="panel">
+      <label for="from">From: <input id="from" type="text" value="Chennai, India"></label>
+      <label for="to">To: <input id="to" type="text" value="Bengaluru, India"></label>
+      <button id="getRouteBtn">Get Route</button>
+      <p id="output"></p>
+    </div>
+
+    <!-- Map -->
+    <div id="map"></div>
+
+    <script>
+      let map, directionsService, directionsRenderer;
+
+      function initMap() {
+        // Initialize map
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 13.0827, lng: 80.2707 }, // Chennai
+          zoom: 7,
+        });
+
+        // Setup Directions API
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+      }
+
+      function calculateRoute() {
+        const from = document.getElementById("from").value;
+        const to = document.getElementById("to").value;
+
+        if (from && to) {
+          directionsService.route(
+            {
+              origin: from,
+              destination: to,
+              travelMode: google.maps.TravelMode.DRIVING,
+            },
+            function(response, status) {
+              if (status === "OK") {
+                directionsRenderer.setDirections(response);
+
+                // Extract distance & duration
+                if (
+                  response.routes &&
+                  response.routes[0] &&
+                  response.routes[0].legs &&
+                  response.routes[0].legs[0]
+                ) {
+                  const route = response.routes[0].legs[0];
+                  document.getElementById("output").innerHTML =
+                    `<b>Distance:</b> ${route.distance.text} <br>
+                     <b>Duration:</b> ${route.duration.text}`;
+                } else {
+                  document.getElementById("output").innerHTML =
+                    "Could not extract route details.";
+                }
+              } else {
+                document.getElementById("output").innerHTML =
+                  "Directions request failed due to " + status;
+              }
+            }
+          );
+        } else {
+          document.getElementById("output").innerHTML =
+            "Please enter both origin and destination.";
+        }
+      }
+
+      // Attach event listener after DOM is loaded
+      document.addEventListener("DOMContentLoaded", function() {
+        const btn = document.getElementById("getRouteBtn");
+        if (btn) {
+          btn.addEventListener("click", calculateRoute);
+        }
+      });
+    </script>
+
+    <!-- Load Google Maps API -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDO6ztAnXwcgB1KYRMJVh_833EyfAsV38E&callback=initMap">
+    </script>
+  </body>
+</html>
